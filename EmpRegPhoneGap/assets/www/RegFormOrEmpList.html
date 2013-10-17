@@ -149,7 +149,7 @@
 	    if(fname != '' && lname != '' && desig != '' && salary != ''){
 		      $.ajax({
 		            type : 'POST',          
-		            url : 'http://192.168.1.4:8080/LoginApp/EmpRegistration', // Servlet URL          
+		            url : 'http://192.168.1.7:8080/LoginApp/EmpRegistration', // Servlet URL          
 		            data:{
 		                'fname':fname,
 		                'lname':lname,
@@ -185,7 +185,7 @@
 	function showAllEmps(){
 		$.ajax({
 	            type : 'GET',        
-	            url : 'http://192.168.1.4:8080/LoginApp/EmpRegistration', // Servlet URL  
+	            url : 'http://192.168.1.7:8080/LoginApp/EmpRegistration', // Servlet URL  
 	            dataType: 'json',
 	            contentType: 'application/json; charset=utf-8',
 	            success : function(data) {
