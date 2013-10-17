@@ -1,0 +1,112 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>
+      Employee Directory
+    </title>
+    <meta http-equiv='content-type' content='application/xhtml+xml; charset=UTF-8' />
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <link type="css" rel="stylesheet" href="css/styles.css" />
+
+    <script type="text/javascript" src="js/jquery-1.10.1.js">
+    </script>
+    <script type="text/javascript" src="js/jquery.mobile-1.2.0.min.js">
+    </script>
+    <script type="text/javascript" charset="utf-8" src="js/cordova.js">
+    </script>
+    <script type="text/javascript" charset="utf-8" src="js/jquery.js">
+    </script>
+    <script type="text/javascript" charset="utf-8" src="js/iscroll.js">
+    </script>
+	
+  </head>
+	
+  <body bgcolor="#562A57">
+<!--
+  	<div id="header" class="header">
+		<h1>Employee Directory</h1>
+	</div>
+	<div id="header2">
+		<h2>Employee List</h2>
+	</div>-->
+	
+	
+	<br>
+	
+	<div style="top:auto; left:auto;">
+		<img src="img/adminlogin.jpg" height="100"/>
+	</div>
+	
+	<br>
+	
+	<div id="loginForm">
+		<h1 align="center" style="font-family:Comic Sans Ms; text-align='center';font-size:20pt; color:#00FF00;">
+	    	  Admin Login
+	    </h1>
+	    <form name="login" action="">
+	    
+	    	<table width="100%" border="0" cellspacing="0">
+	    		<tr style="margin:20 20 20 20;">
+		    		<td width="50%" align="left">User Id</td>
+		    		<td width="50%" align="left"><input type="text" name="userid" id="userid"/></td>
+	    		</tr>
+	    		<tr style="margin:20px;">
+		    		<td align="left">Password</td>
+		    		<td align="left"><input type="password" name="pswrd" id="pswrd"/></td>
+	    		</tr>
+	    		<tr style="margin:20px;">
+	    			<td align="center"><input width="200" type="reset" value="Clear"/></td>
+		    		<td align="center"><input width="200" type="button" value="Login" onclick="verifyLogin();"/></td>
+	    		</tr>
+	    	</table>
+			
+	    </form>
+	</div>
+	
+	<br><br>
+	<div style="float:right"> Designed and Architected by </div>
+	<br><br>
+	<div id="blcLogo" style="float:right;"><img src="img/bc_small.png" width="200" height="80" alt="bluecrimsonLogo"/></div>
+	<br><br><br><br><br>
+	<div style="float:right"><a href="http://www.bluecrimson.net"/>www.bluecrimson.net</div>
+	
+
+	<script type="text/javascript">
+	function verifyLogin(){
+	    var uname = document.getElementById("userid").value;
+	    var pwd = document.getElementById("pswrd").value;
+	    
+	    if(uname != '' && pwd != ''){
+		      $.ajax({
+		            type : 'POST',          
+		            url : 'http://192.168.1.4:8080/LoginApp/Login', // Servlet URL          
+		            data:{
+		                'username':uname,
+		                'password':pwd
+		            },
+		            success : function(data) {           
+		                if("SUCCESS"==data){
+		                    alert("Login Success!!" + data);
+		                    window.location = "RegFormOrEmpList.html";
+		                } else {                   
+		                    alert("Invalid Login!!");
+		                }
+		            },
+		            error : function(xhr, type) {
+		                alert('server error occurred');
+		            }
+		      });
+	      }else{
+	      	alert("please enter both userid and pwd");
+	      }
+	}
+	
+	function GoToRegForm(){
+		window.location = "RegFormOrEmpList.html";
+	}
+    </script>
+    
+    
+  </body>
+
+</html>

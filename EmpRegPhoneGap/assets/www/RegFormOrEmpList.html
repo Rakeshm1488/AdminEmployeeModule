@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>
+      Registration And EmpList Page
+    </title>
+    
+    <!-- Adding jQuery scripts -->
+    <script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/jquery-1.10.1.js"></script>
+	<script type="text/javascript" src="js/jquery.mobile-1.2.0.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/cordova.js"></script>
+    
+    <script type="text/javascript">
+    
+      	$(document).ready(function(){
+      		$('#EmpList').hide();
+      	
+      		$('#showList').click(function(){
+        		$('#RegisterForm').hide();
+        		$('#EmpList').show();
+      		});
+      	
+      		$('#regForm').click(function(){
+      			$('#EmpList').hide();
+      			$('#RegisterForm').show();
+      		});
+
+    		
+    		$("#empImg").click(function(){
+				// Take picture using device camera and retrieve image as base64-encoded string
+		      	navigator.camera.getPicture(onPhotoDataSuccess, onFail, 
+		      		{ quality: 50, destinationType: Camera.DestinationType.DATA_URL });
+			});
+			
+			$("#showEmps").click(function(){
+				showAllEmps();
+			});
+    		
+      	});
+      
+            	
+    	var pictureSource;   // picture source
+      	var destinationType; // sets the format of returned value
+      	var imageStr = "";
+      
+	    document.addEventListener("deviceready", onDeviceReady, false);
+	      
+	    function onDeviceReady(){
+	    	pictureSource = navigator.camera.PictureSourceType;
+    		destinationType = navigator.camera.DestinationType;
+	      	alert("PhoneGap is working!!");
+	    }
+	    
+	
+		function onPhotoDataSuccess(imageData) {
+			$("#smallImage").show();
+			imageStr = "data:image/jpeg;base64," + imageData;
+	      // Uncomment to view the base64-encoded image data
+	      // console.log(imageData);
+	
+	      // Get image handle
+	      var smallImage = document.getElementById('smallImage');
+	
+	      // Unhide image elements
+	      smallImage.style.display = 'block';
+	
+	      // Show the captured photo
+	      // The inline CSS rules are used to resize the image
+	      smallImage.src = "data:image/jpeg;base64," + imageData;
+	    }
+	    
+	    // Called if something bad happens.
+	    function onFail(message) {
+	      alert('Failed because: ' + message);
+	    }
+	    
+    </script>
+	
+  </head>
+
+  <body>
+  
+	<div id="RegisterForm">
+	
+		<h1 align="center" style="font-family:Comic Sans Ms; text-align='center';font-size:20pt; color:#00FF00;">
+	    	Employee Register
+	    </h1>
+	    <br><br>
+		<table width="100%" border="0" cellspacing="0">
+			<tr style="margin:20px;">
+	    		<td width="50%" align="left">FirstName</td>
+	    		<td width="50%" align="left"><input type="text" name="fname" id="fname"/></td>
+			</tr>
+			<tr style="margin:20px;">
+	    		<td align="left">LastName </td>
+	    		<td align="left"><input type="text" name="lname" id="lname"/></td>
+			</tr>
+			<tr style="margin:20px;">
+	    		<td align="left">Designation </td>
+	    		<td align="left"><input type="text" name="desig" id="desig"/></td>
+			</tr>
+			<tr style="margin:20px;">
+	    		<td align="left">Salary </td>
+	    		<td align="left"><input type="text" name="salary" id="salary"/></td>
+			</tr>
+			<tr style="margin:20px;">
+				<td align="left">Click the image to take picture </td>
+	    		<td align="left"><div id="empImg">Click for Img
+	    			<img style="display:none;width:60px;height:60px;" id="smallImage" src="" alt=""/>
+	    		</div><br><br></td>
+			</tr>
+			<tr style="margin:20px;">
+	    		<td align="center"><input width="200" type="button" value="Register" onclick="addEmp();"/></td>
+	    		<td align="center"><input width="200" type="reset" value="Clear"/></td>
+			</tr>
+			<tr style="margin:20px;">
+	    		<td align="left">Do you Wish to see the Emp List?</td>
+	    		<td align="center"><div id="showList">Click to view List</div></td>
+			</tr>
+		</table>
+		
+	</div>
+	
+	<div id="EmpList">
+	
+		<h1 align="center" style="font-family:Comic Sans Ms; text-align='center';font-size:20pt; color:#00FF00;">
+	    	 Employee List
+	    </h1>
+	    <br>
+	    <div id="showEmps">Click to get Employee list</div>
+	    <br><br>
+		<table id="EmpTable"  border="1" cellspacing="0">
+			
+		</table>
+		<br><br>
+		<div id="regForm">Click to Registration Form</div>
+	</div>
+	
+	
+	<script type="text/javascript">
+	function addEmp(){
+	    var fname = document.getElementById("fname").value;
+	    var lname = document.getElementById("lname").value;
+	    var desig = document.getElementById("desig").value;
+	    var salary = document.getElementById("salary").value;
+	    
+	    if(fname != '' && lname != '' && desig != '' && salary != ''){
+		      $.ajax({
+		            type : 'POST',          
+		            url : 'http://192.168.1.4:8080/LoginApp/EmpRegistration', // Servlet URL          
+		            data:{
+		                'fname':fname,
+		                'lname':lname,
+		                'desig':desig,
+		                'salary':salary,
+		                'base64ImgStr':imageStr
+		            },
+		            success : function(data) {           
+		                if("ADDED"==data){                
+		                    alert("Employee Registered successfully!!");
+		                    clearFields();
+		                } else {                   
+		                    alert("Employee Registration failed!!");
+		                }
+		            },
+		            error : function(xhr, type) {
+		                alert('server error occurred');
+		            }
+		      });
+	      }else{
+	      	alert("please enter all the fields");
+	      }
+	}
+	
+	function clearFields(){
+		$("#fname").val('');
+		$("#lname").val('');
+		$("#desig").val('');
+		$("#salary").val('');
+		$("#smallImage").hide();
+	}
+	
+	function showAllEmps(){
+		$.ajax({
+	            type : 'GET',        
+	            url : 'http://192.168.1.4:8080/LoginApp/EmpRegistration', // Servlet URL  
+	            dataType: 'json',
+	            contentType: 'application/json; charset=utf-8',
+	            success : function(data) {
+	            	if(data != null){
+	            		$("#EmpTable").html("<tr><td>FristName</td><td>LastName</td><td>Designation</td><td>Salary</td><td>Employee Img</td></tr>");
+						$.each(data, function(idx, val){
+							$("#EmpTable").append("<tr><td>"+val.firstName+"</td><td>"+val.lastName+"</td><td>"+val.designation+"</td><td>"+val.salary+"</td><td><img width='50px' height='50px' src='"+val.empImg+"'/></td></td>");
+						});
+	                }else{
+	                	alert("Failed get all emps");
+	                }
+	            },
+	            error : function(xhr, type) {
+	                alert('server error occurred' + type);
+	            }
+	      });
+	}
+	
+    </script>
+    
+  	
+  </body>
+
+</html>
